@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>阿尼亚的日语教室 · 通关特效版</title>
+    <style>
+        /* ---------- 原有样式不变，增加庆祝层样式 ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+        }
+        body {
+            background-color: #faf2e6;
+            color: #4e3e2e;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #7a5a3a;
+            text-shadow: 4px 4px 0 #f3d9b1, 6px 6px 0 rgba(200, 160, 110, 0.3);
+            display: inline-block;
+            background: linear-gradient(145deg, #fff9ed, #ffefd2);
+            padding: 0.5rem 2.8rem;
+            border-radius: 80px 30px 80px 30px;
+            box-shadow: 0 15px 25px rgba(139, 111, 76, 0.25), inset 0 -3px 0 #dbbd9a;
+            border: 3px solid #e6c8a6;
+            position: relative;
+            letter-spacing: 2px;
+        }
+        .header h1::before {
+            content: "🥜✨";
+            font-size: 2rem;
+            position: absolute;
+            left: -20px;
+            top: -15px;
+            transform: rotate(-15deg);
+            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.1));
+        }
+        .header h1::after {
+            content: "🕵️‍♀️🌸";
+            font-size: 2rem;
+            position: absolute;
+            right: -25px;
+            bottom: -15px;
+            transform: rotate(10deg);
+            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.1));
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #e6d5b8;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            border: 2px solid #b39264;
+            color: #5a3f28;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background-color: #dbbd9a;
+            transform: scale(1.02);
+        }
+
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem 1.5rem;
+            margin-top: 2rem;
+        }
+        .scene-card {
+            background: #fffcf5;
+            border-radius: 40px 40px 30px 30px;
+            overflow: hidden;
+            box-shadow: 0 15px 25px rgba(110, 80, 50, 0.15);
+            border: 3px solid #ebd5b0;
+            transition: transform 0.25s ease, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .scene-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 22px 30px rgba(139, 111, 76, 0.25);
+            border-color: #c7a472;
+        }
+        .scene-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 3px solid #dbbd9a;
+        }
+        .scene-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            padding: 1rem 0.5rem 0.8rem;
+            background: white;
+            text-align: center;
+            color: #6f4e2e;
+            border-top: 2px dashed #f0dab6;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .scene-sub {
+            background: #f7ebd7;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            font-size: 1rem;
+            color: #8b6f4c;
+            font-weight: 500;
+            margin-top: auto;
+            border-top: 1px solid #e6cfaf;
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scene-detail {
+            display: none;
+        }
+        .detail-header-img {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 50px 50px 30px 30px;
+            overflow: hidden;
+            border: 5px solid #faeedb;
+            box-shadow: 0 10px 0 #b48b5a;
+            margin-bottom: 2rem;
+        }
+        .detail-header-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .detail-header-img span {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,240,210,0.8);
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #6f4e2e;
+            backdrop-filter: blur(3px);
+            border: 2px solid #bb9c70;
+            white-space: nowrap;
+        }
+
+        .game-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f7d9b3;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 3px solid #b48b5a;
+            color: #5a3f28;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 1rem 0 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 0 #8b6f4c;
+        }
+        .game-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #8b6f4c;
+        }
+
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .game-panel {
+            background: #fff9ed;
+            border-radius: 60px 60px 40px 40px;
+            border: 5px solid #ebd5b0;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        .game-panel h2 {
+            font-size: 2.2rem;
+            color: #7a5a3a;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            background: #f7ebd7;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border: 2px solid #dbbd9a;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .game-card {
+            aspect-ratio: 1 / 1;
+            background-color: #fbc4c4;
+            border-radius: 20px;
+            border: 4px solid #a97c52;
+            box-shadow: 0 8px 0 #7b5e3b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: 0.1s;
+            transform: translateY(-2px);
+            color: #3d2b1a;
+            background-size: cover;
+            flex-direction: column;
+        }
+        .game-card.matched {
+            background-color: #b3d9b3;
+            border-color: #2e7d5e;
+            box-shadow: 0 4px 0 #1b5e3a;
+            opacity: 0.8;
+            cursor: default;
+            transform: translateY(4px);
+            pointer-events: none;
+        }
+        .game-card.back {
+            background: #e6c8a6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="40" r="20" fill="%23f9a8a8"/><circle cx="35" cy="35" r="5" fill="white"/><circle cx="65" cy="35" r="5" fill="white"/><circle cx="40" cy="35" r="2" fill="black"/><circle cx="60" cy="35" r="2" fill="black"/><path d="M35 55 Q50 70,65 55" stroke="%238a4b3a" stroke-width="4" fill="none"/><text x="50" y="85" font-size="25" text-anchor="middle" fill="%238a4b3a">🥜</text></svg>');
+            background-size: 60% 60%;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: transparent;
+            border-color: #8b6f4c;
+        }
+        .game-card.back span { display: none; }
+
+        .jp-small {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        /* 庆祝层样式 */
+        .congrats-layer {
+            text-align: center;
+            padding: 2rem;
+        }
+        .congrats-img {
+            max-width: 90%;
+            max-height: 50vh;
+            border-radius: 40px;
+            border: 6px solid #ebd5b0;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+            margin-bottom: 1.5rem;
+        }
+        .congrats-message {
+            font-size: 3.5rem;
+            color: #f7a8a8;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 0 #fff3d1;
+        }
+        .close-congrats-btn {
+            background: #e6c8a6;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 60px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #412f1c;
+            border: 3px solid #b7976d;
+            box-shadow: 0 8px 0 #8b6f4c;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+        .close-congrats-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #8b6f4c;
+        }
+
+        .game-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .game-btn-small {
+            background: #e6c8a6;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #412f1c;
+            border: 2px solid #b7976d;
+            box-shadow: 0 5px 0 #8b6f4c;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+        .game-btn-small:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #8b6f4c;
+        }
+
+        .sentence-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+        .sentence-card {
+            background: white;
+            border-radius: 40px 25px 40px 25px;
+            padding: 1.5rem 1.5rem 1.2rem;
+            border: 3px solid #efdbbd;
+            box-shadow: 12px 12px 0 #dcc09e;
+            transition: all 0.15s;
+        }
+        .sentence-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .character-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #a97c52;
+            box-shadow: 0 6px 0 #7b5e3b;
+        }
+        .japanese-text {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            color: #2d281c;
+            line-height: 1.3;
+        }
+        .romaji {
+            font-size: 1.2rem;
+            color: #777;
+            margin: 6px 0 6px;
+            font-style: italic;
+        }
+        .extra-info {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #d4b58c;
+            display: none;
+            background: #fdf4e3;
+            border-radius: 30px;
+            padding: 15px 20px;
+        }
+        .chinese-trans {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2e5f4b;
+            margin-bottom: 8px;
+        }
+        .card-tools {
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            margin-top: 15px;
+            align-items: center;
+        }
+        .translate-btn {
+            background: #e6c8a6;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #412f1c;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: 2px solid #b7976d;
+            box-shadow: 0 4px 0 #8b6f4c;
+            transition: 0.05s linear;
+        }
+        .translate-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .sound-btn {
+            background: none;
+            border: none;
+            font-size: 2.2rem;
+            cursor: pointer;
+            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.15));
+            transition: 0.1s;
+            line-height: 1;
+        }
+        .sound-btn:hover {
+            transform: scale(1.15);
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 3rem;
+            color: #b5956b;
+            border-top: 2px solid #eed7b7;
+            padding-top: 2rem;
+        }
+        @media (max-width: 700px) {
+            .header h1 { font-size: 2rem; padding: 0.5rem 1.5rem; }
+            .header h1::before, .header h1::after { font-size: 1.5rem; }
+            .japanese-text { font-size: 1.8rem; }
+            .chinese-trans { font-size: 1.3rem; }
+            .character-icon { width: 50px; height: 50px; }
+            .detail-header-img span { font-size: 1.5rem; padding: 0.3rem 1rem; }
+            .game-grid { grid-template-columns: repeat(2, 1fr); }
+            .congrats-message { font-size: 2.5rem; }
+            .close-congrats-btn { font-size: 1.5rem; padding: 0.8rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="header">
+        <h1>🍙 阿尼亚的日语教室 <span>🎧</span></h1>
+    </div>
+
+    <div id="backButtonContainer" style="display: none;">
+        <a class="back-btn" id="backToHomeBtn">🔙 返回场景选择</a>
+    </div>
+
+    <!-- 主页 -->
+    <div id="homePage">
+        <div class="scene-grid" id="sceneGrid">
+            <div class="scene-card" data-scene="morning">
+                <img class="scene-img" src="images/scene-morning.jpg" alt="早晨场景" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22160%22%20viewBox%3D%220%200%20200%20160%22%3E%3Crect%20width%3D%22200%22%20height%3D%22160%22%20fill%3D%22%23ffe7c1%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%22100%22%20font-size%3D%2250%22%20fill%3D%22%237b5e3b%22%3E☀️%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <h3>早上好 · おはよう</h3>
+                <div class="scene-sub">跟家人道早安</div>
+            </div>
+            <div class="scene-card" data-scene="meal">
+                <img class="scene-img" src="images/scene-meal.jpg" alt="餐桌场景" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22160%22%20viewBox%3D%220%200%20200%20160%22%3E%3Crect%20width%3D%22200%22%20height%3D%22160%22%20fill%3D%22%23ffe7c1%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%22100%22%20font-size%3D%2250%22%20fill%3D%22%237b5e3b%22%3E🍛%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <h3>开饭啦 · いただきます</h3>
+                <div class="scene-sub">用餐前后的常用语</div>
+            </div>
+            <div class="scene-card" data-scene="home">
+                <img class="scene-img" src="images/scene-home.jpg" alt="出门回家" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22160%22%20viewBox%3D%220%200%20200%20160%22%3E%3Crect%20width%3D%22200%22%20height%3D%22160%22%20fill%3D%22%23ffe7c1%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%22100%22%20font-size%3D%2250%22%20fill%3D%22%237b5e3b%22%3E🚪%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <h3>我出门了 · 行ってきます</h3>
+                <div class="scene-sub">出门与回家时的问候</div>
+            </div>
+            <div class="scene-card" data-scene="travel">
+                <img class="scene-img" src="images/scene-travel.jpg" alt="旅游场景" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22160%22%20viewBox%3D%220%200%20200%20160%22%3E%3Crect%20width%3D%22200%22%20height%3D%22160%22%20fill%3D%22%23ffe7c1%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%22100%22%20font-size%3D%2250%22%20fill%3D%22%237b5e3b%22%3E✈️%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <h3>旅ひとこと · 旅游一句</h3>
+                <div class="scene-sub">自我介绍和简单询问</div>
+            </div>
+            <div class="scene-card" data-scene="family">
+                <img class="scene-img" src="images/scene-family.jpg" alt="家庭称呼" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22160%22%20viewBox%3D%220%200%20200%20160%22%3E%3Crect%20width%3D%22200%22%20height%3D%22160%22%20fill%3D%22%23ffe7c1%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%22100%22%20font-size%3D%2250%22%20fill%3D%22%237b5e3b%22%3E👪%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <h3>家人叫法 · 家族</h3>
+                <div class="scene-sub">爸爸、妈妈、女儿等称呼</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情页 -->
+    <div id="detailPage" class="scene-detail">
+        <div id="detailHeaderImg" class="detail-header-img"></div>
+        <div id="gameButtonContainer" style="text-align: center;"></div>
+        <div id="sentenceList" class="sentence-grid"></div>
+    </div>
+
+    <!-- 游戏模态框（包含庆祝层） -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-panel">
+            <span class="close-btn" id="closeGameModal">&times;</span>
+            <h2>🥜 哇库哇库！配对游戏 <span>🎴</span></h2>
+            <div class="game-stats" id="gameStats">
+                <span>配对: <span id="pairsMatched">0</span>/<span id="totalPairs">0</span></span>
+                <span>⏱️ <span id="gameTimer">0</span>秒</span>
+            </div>
+            <div id="gameGrid" class="game-grid"></div>
+            <!-- 庆祝层（默认隐藏） -->
+            <div id="congratsLayer" class="congrats-layer" style="display: none;">
+                <img id="congratsImage" src="" alt="通关大图" class="congrats-img">
+                <div class="congrats-message">すごい！</div>
+                <button class="close-congrats-btn" id="closeCongratsBtn">关闭</button>
+            </div>
+            <div class="game-buttons" id="gameButtons">
+                <button class="game-btn-small" id="restartGame">🔄 再玩一次</button>
+                <button class="game-btn-small" id="closeGameBtn">🔚 关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        Ⓒ 您的自定义图片版 · 点击喇叭🔊听发音 (浏览器TTS)
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- 数据 ----------
+        const scenes = [
+            { id: 'morning', title: '早晨的家庭问候' },
+            { id: 'meal', title: '餐桌上的对话' },
+            { id: 'home', title: '出门与回家' },
+            { id: 'travel', title: '旅游自我介绍' },
+            { id: 'family', title: '家庭称呼练习' }
+        ];
+
+        const sentenceData = {
+            morning: [
+                { jp: 'おはようございます', roma: 'Ohayō gozaimasu', chinese: '早上好', character: 'anya' },
+                { jp: 'お父さん、おはよう', roma: 'Otōsan, ohayō', chinese: '爸爸，早上好', character: 'anya' },
+                { jp: 'お母さん、おはよう', roma: 'Okāsan, ohayō', chinese: '妈妈，早上好', character: 'anya' },
+                { jp: 'よく眠れた？', roma: 'Yoku nemureta?', chinese: '睡得好吗？', character: 'loid' },
+                { jp: 'おはよう、アーニャ', roma: 'Ohayō, Ānya', chinese: '早安，阿尼亚', character: 'yor' }
+            ],
+            meal: [
+                { jp: 'いただきます', roma: 'Itadakimasu', chinese: '我开动了', character: 'anya' },
+                { jp: '美味しい！', roma: 'Oishii!', chinese: '好吃！', character: 'anya' },
+                { jp: 'ごちそうさまでした', roma: 'Gochisōsamadeshita', chinese: '多谢款待', character: 'loid' },
+                { jp: 'もっと食べる？', roma: 'Motto taberu?', chinese: '再多吃一点吗？', character: 'yor' },
+                { jp: 'おかわり！', roma: 'Okawari!', chinese: '再来一碗！', character: 'anya' }
+            ],
+            home: [
+                { jp: '行ってきます', roma: 'Ittekimasu', chinese: '我出门了', character: 'loid' },
+                { jp: '行ってらっしゃい', roma: 'Itterasshai', chinese: '路上小心', character: 'yor' },
+                { jp: 'ただいま', roma: 'Tadaima', chinese: '我回来了', character: 'anya' },
+                { jp: 'おかえり', roma: 'Okaeri', chinese: '欢迎回来', character: 'yor' }
+            ],
+            travel: [
+                { jp: '私は中国から来ました', roma: 'Watashi wa Chūgoku kara kimashita', chinese: '我从中国来', character: 'loid' },
+                { jp: 'はじめまして', roma: 'Hajimemashite', chinese: '初次见面，请多关照', character: 'anya' },
+                { jp: 'よろしくお願いします', roma: 'Yoroshiku onegaishimasu', chinese: '请多关照', character: 'yor' },
+                { jp: 'これはいくらですか？', roma: 'Kore wa ikura desu ka?', chinese: '这个多少钱？', character: 'anya' },
+                { jp: 'トイレはどこですか？', roma: 'Toire wa doko desu ka?', chinese: '洗手间在哪里？', character: 'loid' }
+            ],
+            family: [
+                { jp: 'お父さん', roma: 'Otōsan', chinese: '父亲/爸爸', character: 'anya' },
+                { jp: 'お母さん', roma: 'Okāsan', chinese: '母亲/妈妈', character: 'anya' },
+                { jp: '娘', roma: 'Musume', chinese: '女儿', character: 'loid' },
+                { jp: '息子', roma: 'Musuko', chinese: '儿子', character: 'loid' },
+                { jp: '家族', roma: 'Kazoku', chinese: '家人', character: 'yor' }
+            ]
+        };
+
+        function getAvatarSrc(character) {
+            const map = {
+                'anya': 'images/anya.png',
+                'loid': 'images/loid.png',
+                'yor': 'images/yor.png'
+            };
+            return map[character] || 'images/default-avatar.png';
+        }
+
+        // DOM 元素
+        const homePage = document.getElementById('homePage');
+        const detailPage = document.getElementById('detailPage');
+        const backBtnContainer = document.getElementById('backButtonContainer');
+        const backBtn = document.getElementById('backToHomeBtn');
+        const sentenceListDiv = document.getElementById('sentenceList');
+        const detailHeaderImg = document.getElementById('detailHeaderImg');
+        const gameButtonContainer = document.getElementById('gameButtonContainer');
+
+        const gameModal = document.getElementById('gameModal');
+        const closeGameModal = document.getElementById('closeGameModal');
+        const closeGameBtn = document.getElementById('closeGameBtn');
+        const restartGameBtn = document.getElementById('restartGame');
+        const gameGrid = document.getElementById('gameGrid');
+        const pairsMatchedSpan = document.getElementById('pairsMatched');
+        const totalPairsSpan = document.getElementById('totalPairs');
+        const gameTimerSpan = document.getElementById('gameTimer');
+        const gameStats = document.getElementById('gameStats');
+        const gameButtons = document.getElementById('gameButtons');
+        const congratsLayer = document.getElementById('congratsLayer');
+        const congratsImage = document.getElementById('congratsImage');
+        const closeCongratsBtn = document.getElementById('closeCongratsBtn');
+
+        // 游戏状态变量
+        let currentSceneId = null;
+        let cards = [];              // 卡片对象数组 { id, type, text, roma, pairId, matched }
+        let flippedJapaneseIndex = null; // 当前翻开（未配对）的日语卡片索引，null表示无
+        let matchedCount = 0;
+        let totalPairs = 0;
+        let timerInterval = null;
+        let seconds = 0;
+        let gameActive = false;
+
+        // ---------- 原有功能 ----------
+        function showHome() {
+            homePage.style.display = 'block';
+            detailPage.style.display = 'none';
+            backBtnContainer.style.display = 'none';
+            gameModal.style.display = 'none';
+            stopTimer();
+        }
+
+        function showScene(sceneId) {
+            currentSceneId = sceneId;
+            homePage.style.display = 'none';
+            detailPage.style.display = 'block';
+            backBtnContainer.style.display = 'block';
+
+            const scene = scenes.find(s => s.id === sceneId);
+            const sceneTitle = scene ? scene.title : '日常会话';
+
+            const headerImgSrc = `images/header-${sceneId}.jpg`;
+            detailHeaderImg.innerHTML = `
+                <img src="${headerImgSrc}" alt="${sceneTitle}" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22200%22%20viewBox%3D%220%200%20400%20200%22%3E%3Crect%20width%3D%22400%22%20height%3D%22200%22%20fill%3D%22%23edd5b5%22%2F%3E%3Ctext%20x%3D%22120%22%20y%3D%22120%22%20font-size%3D%2250%22%20fill%3D%22%23925e3a%22%3E🌸%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                <span>🌸 ${sceneTitle} 🌸</span>
+            `;
+
+            gameButtonContainer.innerHTML = `
+                <button class="game-btn" id="startGameBtn">🎮 玩游戏 · 配对挑战</button>
+            `;
+            document.getElementById('startGameBtn').addEventListener('click', () => {
+                startGame(sceneId);
+            });
+
+            const sentences = sentenceData[sceneId] || [];
+            let htmlStr = '';
+            sentences.forEach((s, idx) => {
+                const avatarSrc = getAvatarSrc(s.character);
+                const uniqueId = `extra-${sceneId}-${idx}`;
+                htmlStr += `
+                    <div class="sentence-card">
+                        <div class="sentence-header">
+                            <img src="${avatarSrc}" alt="${s.character}" class="character-icon" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2228%22%20fill%3D%22%23fed8b1%22%20stroke%3D%22%23a97c52%22%20stroke-width%3D%223%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2240%22%20font-size%3D%2230%22%20text-anchor%3D%22middle%22%20fill%3D%22%237b5e3b%22%3E😊%3C%2Ftext%3E%3C%2Fsvg%3E');">
+                            <div>
+                                <div class="japanese-text">${s.jp}</div>
+                                <div class="romaji">${s.roma}</div>
+                            </div>
+                        </div>
+                        <div class="extra-info" id="${uniqueId}">
+                            <div class="chinese-trans">${s.chinese}</div>
+                        </div>
+                        <div class="card-tools">
+                            <button class="translate-btn" data-target="${uniqueId}">🔍 翻译</button>
+                            <button class="sound-btn" data-voice="${s.jp}">🔊</button>
+                        </div>
+                    </div>
+                `;
+            });
+            sentenceListDiv.innerHTML = htmlStr;
+
+            document.querySelectorAll('.translate-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const targetId = this.getAttribute('data-target');
+                    const extraDiv = document.getElementById(targetId);
+                    if (extraDiv) {
+                        if (extraDiv.style.display === 'none' || !extraDiv.style.display) {
+                            extraDiv.style.display = 'block';
+                            this.textContent = '🔍 隐藏';
+                        } else {
+                            extraDiv.style.display = 'none';
+                            this.textContent = '🔍 翻译';
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.sound-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const text = this.getAttribute('data-voice');
+                    if (!text) return;
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ja-JP';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utterance);
+                });
+            });
+        }
+
+        // ---------- 游戏逻辑 ----------
+        function startGame(sceneId) {
+            currentSceneId = sceneId; // 记录当前场景ID，用于通关图片
+            const sentences = sentenceData[sceneId] || [];
+            if (sentences.length === 0) return;
+
+            // 构建卡片数组
+            let newCards = [];
+            sentences.forEach((s, idx) => {
+                newCards.push({
+                    id: `jp-${idx}`,
+                    type: 'jp',
+                    text: s.jp,
+                    roma: s.roma,
+                    pairId: idx,
+                    matched: false,
+                });
+                newCards.push({
+                    id: `zh-${idx}`,
+                    type: 'zh',
+                    text: s.chinese,
+                    pairId: idx,
+                    matched: false,
+                });
+            });
+            cards = shuffleArray(newCards);
+            totalPairs = sentences.length;
+            matchedCount = 0;
+            flippedJapaneseIndex = null;
+            seconds = 0;
+            gameActive = true;
+
+            totalPairsSpan.textContent = totalPairs;
+            pairsMatchedSpan.textContent = matchedCount;
+            gameTimerSpan.textContent = seconds;
+
+            // 隐藏庆祝层（如果之前显示过）
+            congratsLayer.style.display = 'none';
+            gameGrid.style.display = 'grid';
+            gameStats.style.display = 'flex';
+            gameButtons.style.display = 'flex';
+
+            stopTimer();
+            timerInterval = setInterval(() => {
+                if (gameActive) {
+                    seconds++;
+                    gameTimerSpan.textContent = seconds;
+                }
+            }, 1000);
+
+            renderGameGrid();
+            gameModal.style.display = 'flex';
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function renderGameGrid() {
+            let html = '';
+            cards.forEach((card, index) => {
+                if (card.matched) {
+                    html += `<div class="game-card matched" data-index="${index}" data-type="${card.type}">${card.type === 'jp' ? card.text : card.text}</div>`;
+                } else {
+                    if (card.type === 'zh') {
+                        html += `<div class="game-card" data-index="${index}" data-type="zh">${card.text}</div>`;
+                    } else {
+                        html += `<div class="game-card back" data-index="${index}" data-type="jp"><span>${card.text}</span></div>`;
+                    }
+                }
+            });
+            gameGrid.innerHTML = html;
+
+            document.querySelectorAll('.game-card').forEach(cardDiv => {
+                cardDiv.addEventListener('click', onCardClick);
+            });
+        }
+
+        // 播放成功音效
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch (e) {
+                console.log('音效播放失败');
+            }
+        }
+
+        // 播放日语“你真棒”
+        function playCongratsVoice() {
+            const utterance = new SpeechSynthesisUtterance('すごい！');
+            utterance.lang = 'ja-JP';
+            utterance.rate = 1;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 显示通关庆祝层
+        function showCongrats() {
+            // 隐藏游戏区域
+            gameGrid.style.display = 'none';
+            gameStats.style.display = 'none';
+            gameButtons.style.display = 'none';
+            // 设置庆祝图片（使用当前场景的头图）
+            congratsImage.src = `images/header-${currentSceneId}.jpg`;
+            // 显示庆祝层
+            congratsLayer.style.display = 'block';
+            // 播放语音
+            playCongratsVoice();
+        }
+
+        function onCardClick(e) {
+            if (!gameActive) return;
+            const cardDiv = e.currentTarget;
+            const index = parseInt(cardDiv.dataset.index, 10);
+            if (isNaN(index)) return;
+
+            const card = cards[index];
+            if (card.matched) return;
+
+            if (card.type === 'jp') {
+                if (flippedJapaneseIndex !== null && flippedJapaneseIndex !== index) {
+                    const prevDiv = document.querySelector(`.game-card[data-index="${flippedJapaneseIndex}"]`);
+                    if (prevDiv && !cards[flippedJapaneseIndex].matched) {
+                        prevDiv.classList.add('back');
+                        prevDiv.innerHTML = '<span></span>';
+                    }
+                }
+                if (flippedJapaneseIndex === index) return;
+
+                cardDiv.classList.remove('back');
+                cardDiv.innerHTML = `${card.text}<div class="jp-small">${card.roma}</div>`;
+                const utterance = new SpeechSynthesisUtterance(card.text);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.9;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+
+                flippedJapaneseIndex = index;
+            }
+            else if (card.type === 'zh') {
+                if (flippedJapaneseIndex === null) return;
+                const jpCard = cards[flippedJapaneseIndex];
+                if (jpCard.matched) {
+                    flippedJapaneseIndex = null;
+                    return;
+                }
+                if (jpCard.pairId === card.pairId) {
+                    // 配对成功
+                    card.matched = true;
+                    jpCard.matched = true;
+                    matchedCount++;
+                    pairsMatchedSpan.textContent = matchedCount;
+
+                    const jpDiv = document.querySelector(`.game-card[data-index="${flippedJapaneseIndex}"]`);
+                    if (jpDiv) {
+                        jpDiv.classList.add('matched');
+                        jpDiv.classList.remove('back');
+                        jpDiv.innerHTML = `${jpCard.text}<div class="jp-small">${jpCard.roma}</div>`;
+                    }
+                    cardDiv.classList.add('matched');
+
+                    playSuccessSound();
+
+                    flippedJapaneseIndex = null;
+
+                    if (matchedCount === totalPairs) {
+                        gameActive = false;
+                        stopTimer();
+                        // 显示庆祝特效
+                        showCongrats();
+                    }
+                } else {
+                    const jpDiv = document.querySelector(`.game-card[data-index="${flippedJapaneseIndex}"]`);
+                    if (jpDiv) {
+                        jpDiv.classList.add('back');
+                        jpDiv.innerHTML = '<span></span>';
+                    }
+                    flippedJapaneseIndex = null;
+                }
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetGame() {
+            if (!currentSceneId) return;
+            stopTimer();
+            gameActive = false;
+            startGame(currentSceneId);
+        }
+
+        // 关闭庆祝层
+        closeCongratsBtn.addEventListener('click', () => {
+            congratsLayer.style.display = 'none';
+            gameGrid.style.display = 'grid';
+            gameStats.style.display = 'flex';
+            gameButtons.style.display = 'flex';
+        });
+
+        // 关闭模态框
+        closeGameModal.addEventListener('click', () => {
+            gameModal.style.display = 'none';
+            stopTimer();
+        });
+        closeGameBtn.addEventListener('click', () => {
+            gameModal.style.display = 'none';
+            stopTimer();
+        });
+        restartGameBtn.addEventListener('click', resetGame);
+
+        // 场景卡片点击
+        document.querySelectorAll('.scene-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const sceneId = card.getAttribute('data-scene');
+                if (sceneId) showScene(sceneId);
+            });
+        });
+
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showHome();
+        });
+
+        showHome();
+    })();
+</script>
+</body>
+</html>
